@@ -1,12 +1,6 @@
-import { createConnection } from "typeorm";
+import mongoose from "mongoose";
 
-createConnection({
-  type: "mongodb",
-  host: "localhost",
-  port: 27017,
-  database: "test",
-  username: "root",
-  password: "baltaio",
-})
-  .then(() => console.log(""))
-  .catch((error) => console.log(error));
+mongoose
+  .connect("mongodb://root:root@localhost:27017/chat")
+  .then(() => console.log("Database connected"))
+  .catch((err) => console.log(err));

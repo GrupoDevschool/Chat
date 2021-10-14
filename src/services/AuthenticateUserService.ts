@@ -24,6 +24,7 @@ class AuthenticateUserService {
     const token = sign(
       {
         email: user.email,
+        nome: user.nome,
       },
       "484a7c311864834e9827a313e78cf575",
       {

@@ -8,13 +8,6 @@ const roomSchema = new Schema({
       userId: { type: String, required: true },
     },
   ],
-  mensagens: [
-    {
-      texto: { type: String, required: true },
-      autorId: { type: String, required: true },
-      dataCriacao: { type: Date, default: new Date() },
-    },
-  ],
 });
 
 const Room = model("Room", roomSchema);

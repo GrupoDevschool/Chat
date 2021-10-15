@@ -1,9 +1,9 @@
 interface Mensagem {
   texto: string;
 
-  autorId: string;
+  autor: string;
 
-  roomId: string;
+  room: string;
 }
 
 export { Mensagem };

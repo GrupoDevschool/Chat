@@ -1,14 +1,35 @@
-import express, { json } from "express";
-import cors from "cors";
-import { router } from "./routes";
 import "./database";
 
-const app = express();
+import { http, io } from "./http";
+import { Socket } from "socket.io";
+import { ListMessagesService } from "./services/ListMessagesService";
+import { CreateMessageService } from "./services/CreateMessageService";
 
-app.use(cors());
+io.on("connection", (socket: Socket) => {
+  const listMessageService = new ListMessagesService();
+  const createMessageService = new CreateMessageService();
 
-app.use(json());
+  console.log("socket:" + socket.id);
 
-app.use(router);
+  socket.on("first_access", async ({ roomName }, callback) => {
+    console.log(roomName);
+    const mensagens = await listMessageService.execute(roomName);
+    console.log(mensagens);
+    callback(mensagens);
+  });
 
-app.listen(3333, () => console.log("Rodando na porta 3333"));
+  socket.on("message", async (params, callback) => {
+    console.log(params);
+    const { texto, autor, room } = params;
+    const mensagem = await createMessageService.execute({ texto, autor, room });
+    console.log(mensagem);
+    callback(mensagem);
+    socket.broadcast.emit("nova_msg", mensagem);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("socketid: " + socket.id + " desconectou");
+  });
+});
+
+http.listen(3333, () => console.log("Rodando na porta 3333"));

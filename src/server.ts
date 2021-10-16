@@ -1,9 +1,10 @@
 import "./database";
 
-import { http, io } from "./http";
 import { Socket } from "socket.io";
-import { ListMessagesService } from "./services/ListMessagesService";
+
+import { http, io } from "./http";
 import { CreateMessageService } from "./services/CreateMessageService";
+import { ListMessagesService } from "./services/ListMessagesService";
 
 io.on("connection", (socket: Socket) => {
   const listMessageService = new ListMessagesService();
@@ -11,20 +12,24 @@ io.on("connection", (socket: Socket) => {
 
   console.log("socket:" + socket.id);
 
-  socket.on("first_access", async ({ roomName }, callback) => {
+  socket.on("select_room", async ({ roomName }, callback) => {
     console.log(roomName);
+    const rooms = io.of("/").adapter.rooms;
+    rooms.forEach((room, id) => {
+      socket.leave(id);
+    });
+    socket.join(roomName);
     const mensagens = await listMessageService.execute(roomName);
-    console.log(mensagens);
     callback(mensagens);
   });
 
-  socket.on("message", async (params, callback) => {
+  socket.on("message", async (params) => {
     console.log(params);
     const { texto, autor, room } = params;
     const mensagem = await createMessageService.execute({ texto, autor, room });
     console.log(mensagem);
-    callback(mensagem);
-    socket.broadcast.emit("nova_msg", mensagem);
+    // callback(mensagem);
+    io.to(room).emit("message", mensagem);
   });
 
   socket.on("disconnect", () => {

@@ -16,7 +16,7 @@ class CreateMessageService {
         ultimaMensagem: mensagem._id,
       },
     });
-    return mensagemCriada;
+    return mensagemCriada.populate("autor room");
   }
 }
 

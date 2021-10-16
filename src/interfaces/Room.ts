@@ -3,7 +3,7 @@ import { Mensagem } from "./Mensagem";
 interface Room {
   nome: string;
 
-  ultimaMensagem: String;
+  ultimaMensagem: string;
 }
 
 export { Room };

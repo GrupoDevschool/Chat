@@ -25,7 +25,9 @@ io.on("connection", (socket: Socket) => {
   socket.on("message", async (params) => {
     const { texto, autor, room } = params;
     const mensagem = await createMessageService.execute({ texto, autor, room });
+    console.log(mensagem);
     io.to(room).emit("message", mensagem);
+    io.emit("last_message", mensagem);
   });
 
   socket.on("disconnect", () => {

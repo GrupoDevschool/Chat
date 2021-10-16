@@ -11,12 +11,16 @@ class CreateMessageService {
   async execute({ texto, autor, room }: IMensagemRequest) {
     const mensagem = new Mensagem({ texto, autor, room });
     const mensagemCriada = await mensagem.save();
-    Room.findByIdAndUpdate(mensagem.room, {
+    await Room.findByIdAndUpdate(mensagem.room, {
       $set: {
         ultimaMensagem: mensagem._id,
       },
     });
-    return mensagemCriada.populate("autor room");
+
+    await mensagemCriada.populate({ path: "room", select: "nome _id" });
+    await mensagemCriada.populate({ path: "autor", select: "nome _id" });
+
+    return mensagemCriada;
   }
 }
 

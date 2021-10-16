@@ -13,7 +13,6 @@ io.on("connection", (socket: Socket) => {
   console.log("socket:" + socket.id);
 
   socket.on("select_room", async ({ roomName }, callback) => {
-    console.log(roomName);
     const rooms = io.of("/").adapter.rooms;
     rooms.forEach((room, id) => {
       socket.leave(id);
@@ -24,11 +23,8 @@ io.on("connection", (socket: Socket) => {
   });
 
   socket.on("message", async (params) => {
-    console.log(params);
     const { texto, autor, room } = params;
     const mensagem = await createMessageService.execute({ texto, autor, room });
-    console.log(mensagem);
-    // callback(mensagem);
     io.to(room).emit("message", mensagem);
   });
 

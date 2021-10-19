@@ -3,6 +3,7 @@ import { AuthenticateUserController } from "./controllers/AuthenticateUserContro
 import { CreateRoomController } from "./controllers/CreateRoomController";
 import { CreateUserController } from "./controllers/CreateUserController";
 import { FindConnectionController } from "./controllers/FindConnectionController";
+import { ListOlderMessagesController } from "./controllers/ListOlderMessagesController";
 import { ListRoomController } from "./controllers/ListRoomController";
 import { ensureAuthenticated } from "./middleware/ensureAuthenticate";
 import { CreateConnectionService } from "./services/CreateConnectionService";
@@ -14,6 +15,9 @@ const createUserController = new CreateUserController();
 const createRoomController = new CreateRoomController();
 const listRoomController = new ListRoomController();
 const findConnectionController = new FindConnectionController();
+const listOlderMessagesController = new ListOlderMessagesController();
+
+router.get("/api/olderMessages", listOlderMessagesController.handle);
 
 router.post("/api/auth", authenticateUserController.handle);
 

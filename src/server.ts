@@ -12,13 +12,13 @@ io.on("connection", (socket: Socket) => {
 
   console.log("socket:" + socket.id);
 
-  socket.on("select_room", async ({ roomName }, callback) => {
+  socket.on("select_room", async ({ roomId }, callback) => {
     const rooms = io.of("/").adapter.rooms;
     rooms.forEach((room, id) => {
       socket.leave(id);
     });
-    socket.join(roomName);
-    const mensagens = await listMessageService.execute(roomName);
+    socket.join(roomId);
+    const mensagens = await listMessageService.execute(roomId);
     callback(mensagens);
   });
 
